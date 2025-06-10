@@ -216,6 +216,16 @@ public final class InitClient {
 		REGISTRY_CLIENT.registerItemModelPredicate(Items.RAIL_CONNECTOR_TURN_BACK, new Identifier(Init.MOD_ID, "selected"), checkItemPredicateTag());
 		REGISTRY_CLIENT.registerItemModelPredicate(Items.RAIL_CONNECTOR_CABLE_CAR, new Identifier(Init.MOD_ID, "selected"), checkItemPredicateTag());
 		REGISTRY_CLIENT.registerItemModelPredicate(Items.RAIL_CONNECTOR_RUNWAY, new Identifier(Init.MOD_ID, "selected"), checkItemPredicateTag());
+		REGISTRY_CLIENT.registerItemModelPredicate(Items.RAIL_CONNECTOR_25, new Identifier(Init.MOD_ID, "selected"), checkItemPredicateTag());
+		REGISTRY_CLIENT.registerItemModelPredicate(Items.RAIL_CONNECTOR_25_ONE_WAY, new Identifier(Init.MOD_ID, "selected"), checkItemPredicateTag());	
+		REGISTRY_CLIENT.registerItemModelPredicate(Items.RAIL_CONNECTOR_30, new Identifier(Init.MOD_ID, "selected"), checkItemPredicateTag());
+		REGISTRY_CLIENT.registerItemModelPredicate(Items.RAIL_CONNECTOR_30_ONE_WAY, new Identifier(Init.MOD_ID, "selected"), checkItemPredicateTag());	
+		REGISTRY_CLIENT.registerItemModelPredicate(Items.RAIL_CONNECTOR_50, new Identifier(Init.MOD_ID, "selected"), checkItemPredicateTag());
+		REGISTRY_CLIENT.registerItemModelPredicate(Items.RAIL_CONNECTOR_50_ONE_WAY, new Identifier(Init.MOD_ID, "selected"), checkItemPredicateTag());	
+		REGISTRY_CLIENT.registerItemModelPredicate(Items.RAIL_CONNECTOR_70, new Identifier(Init.MOD_ID, "selected"), checkItemPredicateTag());
+		REGISTRY_CLIENT.registerItemModelPredicate(Items.RAIL_CONNECTOR_90_ONE_WAY, new Identifier(Init.MOD_ID, "selected"), checkItemPredicateTag());	
+		REGISTRY_CLIENT.registerItemModelPredicate(Items.RAIL_CONNECTOR_110, new Identifier(Init.MOD_ID, "selected"), checkItemPredicateTag());
+		REGISTRY_CLIENT.registerItemModelPredicate(Items.RAIL_CONNECTOR_110_ONE_WAY, new Identifier(Init.MOD_ID, "selected"), checkItemPredicateTag());	
 		REGISTRY_CLIENT.registerItemModelPredicate(Items.RAIL_REMOVER, new Identifier(Init.MOD_ID, "selected"), checkItemPredicateTag());
 		REGISTRY_CLIENT.registerItemModelPredicate(Items.SIGNAL_CONNECTOR_WHITE, new Identifier(Init.MOD_ID, "selected"), checkItemPredicateTag());
 		REGISTRY_CLIENT.registerItemModelPredicate(Items.SIGNAL_CONNECTOR_ORANGE, new Identifier(Init.MOD_ID, "selected"), checkItemPredicateTag());
