@@ -8,8 +8,6 @@ jobs:
       matrix:
         minecraft: [ 1.20.1 ]
     runs-on: ubuntu-latest
-    env:
-      BUILD_ARTIFACTS: ${{ secrets.BUILD_ARTIFACTS }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@main
@@ -53,4 +51,3 @@ jobs:
       - name: Post Crowdin translation analysis
         if: ${{ matrix.minecraft == '1.20.4' }}
         run: cat build/translation/analysis.md >> $GITHUB_STEP_SUMMARY
-        continue-on-error: true
