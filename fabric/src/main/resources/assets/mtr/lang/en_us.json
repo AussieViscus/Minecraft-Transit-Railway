@@ -744,6 +744,6 @@
 	"item.mtr.rail_connector_50": "Rail Connector 50",
 	"item.mtr.rail_connector_50_one_way": "Rail Connector 50 (One-way)",
 	"item.mtr.rail_connector_70": "Rail Connector 70",
-  "train.mtr.spruce_boat": "Spruce Boat"
+  	"train.mtr.spruce_boat": "Spruce Boat",
 	"item.mtr.rail_connector_70_one_way": "Rail Connector 70 (One-way)"
 }
