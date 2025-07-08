@@ -305,6 +305,7 @@
 	"gui.mtr.offset_x": "Offset X: %s",
 	"gui.mtr.offset_y": "Offset Y: %s",
 	"gui.mtr.offset_z": "Offset Z: %s",
+	"gui.mtr.output_redstone": "Output Redstone",
 	"gui.mtr.path_found": "Main path generated successfully",
 	"gui.mtr.path_generating": "Started path generation %s ago...",
 	"gui.mtr.path_not_found_between": "Path not found on|> %s|between|> %s|and|> %s|",
@@ -743,5 +744,6 @@
 	"item.mtr.rail_connector_50": "Rail Connector 50",
 	"item.mtr.rail_connector_50_one_way": "Rail Connector 50 (One-way)",
 	"item.mtr.rail_connector_70": "Rail Connector 70",
+  "train.mtr.spruce_boat": "Spruce Boat"
 	"item.mtr.rail_connector_70_one_way": "Rail Connector 70 (One-way)"
 }
