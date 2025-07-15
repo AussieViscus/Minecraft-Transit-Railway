@@ -20,7 +20,13 @@ public enum RailType implements IGui {
 	CABLE_CAR(30, MapColor.getWhiteMapped(), false, true, true, Rail.Shape.CABLE),
 	CABLE_CAR_STATION(2, MapColor.getWhiteMapped(), false, true, true, Rail.Shape.QUADRATIC),
 	RUNWAY(300, MapColor.getPalePurpleMapped(), false, true, false, Rail.Shape.QUADRATIC),
-	AIRPLANE_DUMMY(900, MapColor.getBlackMapped(), false, true, false, Rail.Shape.QUADRATIC);
+	AIRPLANE_DUMMY(900, MapColor.getBlackMapped(), false, true, false, Rail.Shape.QUADRATIC),
+	WOODEN1(25, MapColor.getBrownMapped(), false, true, true, Rail.Shape.QUADRATIC),
+	WOODEN2(30, MapColor.getLightBlueMapped(), false, true, true, Rail.Shape.QUADRATIC),
+	STONE2(50, MapColor.getGreenMapped(), false, true, true, Rail.Shape.QUADRATIC),
+	EMERALD2(70, MapColor.getBlueMapped(), false, true, true, Rail.Shape.QUADRATIC),
+	SMELTEDIRON(90, MapColor.getLightGrayMapped(), false, true, true, Rail.Shape.QUADRATIC),
+	SLOWOBSIDIAN(110, MapColor.getBlackMapped(), false, true, true, Rail.Shape.QUADRATIC);
 
 	public final int speedLimit;
 	public final int color;

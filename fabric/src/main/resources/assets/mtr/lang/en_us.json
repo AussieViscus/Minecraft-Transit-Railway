@@ -732,5 +732,18 @@
 	"train.mtr.sp1900": "SP1900",
 	"train.mtr.sp1900_mini": "SP1900 (Mini)",
 	"train.mtr.sp1900_small": "SP1900 (Small)",
-	"train.mtr.spruce_boat": "Spruce Boat"
+	"train.mtr.spruce_boat": "Spruce Boat",
+	"item.mtr.rail_connector_90": "Rail Connector 90",
+	"item.mtr.rail_connector_90_one_way": "Rail Connector 90 (One-way)",
+	"item.mtr.rail_connector_110": "Rail Connector 110",
+	"item.mtr.rail_connector_110_one_way": "Rail Connector 110 (One-way)",
+	"item.mtr.rail_connector_25": "Rail Connector 25",
+	"item.mtr.rail_connector_25_one_way": "Rail Connector 25 (One-way)",
+	"item.mtr.rail_connector_30": "Rail Connector 30",
+	"item.mtr.rail_connector_30_one_way": "Rail Connector 30 (One-way)",
+	"item.mtr.rail_connector_50": "Rail Connector 50",
+	"item.mtr.rail_connector_50_one_way": "Rail Connector 50 (One-way)",
+	"item.mtr.rail_connector_70": "Rail Connector 70",
+  	"train.mtr.spruce_boat": "Spruce Boat",
+	"item.mtr.rail_connector_70_one_way": "Rail Connector 70 (One-way)"
 }
