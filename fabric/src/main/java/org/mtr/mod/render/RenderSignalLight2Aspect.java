@@ -42,11 +42,9 @@ public class RenderSignalLight2Aspect<T extends BlockSignalBase.BlockEntityBase>
             break;
         case 3: // After first cooldown
             topColor = COLOR_YELLOW;
-            bottomColor = COLOR_RED;
+            bottomColor = COLOR_GREEN;
             break;
         case 4: // After second cooldown
-            topColor = COLOR_YELLOW;
-            bottomColor = COLOR_GREEN;
             break;
         case 5: // After third cooldown (Final state)
         default: // Failsafe to the final clear state
