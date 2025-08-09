@@ -27,7 +27,7 @@ public abstract class BlockSignalBase extends BlockExtension implements Directio
 	public static final EnumProperty<EnumBooleanInverted> IS_45 = EnumProperty.of("is_45", EnumBooleanInverted.class);
 	public static final IntegerProperty POWER = IntegerProperty.of("power", 0, 15);
 
-	private static final int COOLDOWN_1 = 2000;
+	private static final int COOLDOWN_1 = 4000;
 	private static final int COOLDOWN_2 = COOLDOWN_1 + 2000;
 	private static final int COOLDOWN_3 = COOLDOWN_2 + 2000; 
 	private static final int ACCEPT_REDSTONE_COOLDOWN = 800;
