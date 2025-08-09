@@ -29,6 +29,7 @@ public abstract class BlockSignalBase extends BlockExtension implements Directio
 
 	private static final int COOLDOWN_1 = 2000;
 	private static final int COOLDOWN_2 = COOLDOWN_1 + 2000;
+	private static final int COOLDOWN_3 = COOLDOWN_2 + 2000; 
 	private static final int ACCEPT_REDSTONE_COOLDOWN = 800;
 
 	public BlockSignalBase(BlockSettings blockSettings) {
@@ -150,25 +151,27 @@ public abstract class BlockSignalBase extends BlockExtension implements Directio
 		}
 
 		public int getActualAspect(boolean occupied, boolean isBackSide) {
-			final long currentTime = System.currentTimeMillis();
-			if (occupied) {
-				if (isBackSide) {
-					lastOccupiedTime2 = currentTime;
-				} else {
-					lastOccupiedTime1 = currentTime;
-				}
-				return 1;
-			} else {
-				final long difference = currentTime - (isBackSide ? lastOccupiedTime2 : lastOccupiedTime1);
-				if (difference >= COOLDOWN_2) {
-					return 0;
-				} else if (difference >= COOLDOWN_1) {
-					return 3;
-				} else {
-					return 2;
-				}
+    		final long currentTime = System.currentTimeMillis();
+   				if (occupied) {
+        			if (isBackSide) {
+            			lastOccupiedTime2 = currentTime;
+        			} else {
+            			lastOccupiedTime1 = currentTime;
+        			}
+        			return 1; // Aspect 1: Occupied
+    			} else {
+        			final long difference = currentTime - (isBackSide ? lastOccupiedTime2 : lastOccupiedTime1);
+        			if (difference < COOLDOWN_1) {
+            			return 2; // Aspect 2: Immediately after occupied
+        			} else if (difference < COOLDOWN_2) {
+            			return 3; // Aspect 3: After COOLDOWN_1
+        			} else if (difference < COOLDOWN_3) {
+            			return 4; // Aspect 4: After COOLDOWN_2
+        			} else {
+            			return 5; // Aspect 5: After COOLDOWN_3 (Final Clear State)
+        			}
+    			}
 			}
-		}
 
 		public void checkForRedstoneUpdate(int redstoneLevel, ObjectArrayList<String> railIds1, ObjectArrayList<String> railIds2) {
 			final int newRedstoneLevel = getOutputRedstone() ? redstoneLevel : 0;
