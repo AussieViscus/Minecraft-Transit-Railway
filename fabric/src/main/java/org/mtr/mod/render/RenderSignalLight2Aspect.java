@@ -26,6 +26,7 @@ public class RenderSignalLight2Aspect<T extends BlockSignalBase.BlockEntityBase>
     final int COLOR_RED = 0xFFFF0000;
     final int COLOR_YELLOW = 0xFFFFAA00;
     final int COLOR_GREEN = 0xFF00FF00;
+	final int COLOR_BLANK = 0;
 
     int topColor;
     int bottomColor;
@@ -45,6 +46,9 @@ public class RenderSignalLight2Aspect<T extends BlockSignalBase.BlockEntityBase>
             bottomColor = COLOR_GREEN;
             break;
         case 4: // After second cooldown
+			topColor = COLOR_BLANK;
+            bottomColor = COLOR_BLANK;
+            break;
         case 5: // After third cooldown (Final state)
         default: // Failsafe to the final clear state
             topColor = COLOR_GREEN;
@@ -56,13 +60,16 @@ public class RenderSignalLight2Aspect<T extends BlockSignalBase.BlockEntityBase>
     MainRenderer.scheduleRender(new Identifier(Init.MOD_ID, "textures/block/white.png"), false, QueuedRenderLayer.LIGHT, (graphicsHolder, offset) -> {
         storedMatrixTransformations.transform(graphicsHolder, offset);
 
-        // Draw the top light
-        IDrawing.drawTexture(graphicsHolder, -0.125F, yTop, -0.19375F, 0.125F, yTop + 0.25F, -0.19375F, Direction.UP, topColor, GraphicsHolder.getDefaultLight());
+    // Draw the top light only if it's not blank
+	if (topColor != COLOR_BLANK) {
+    	IDrawing.drawTexture(graphicsHolder, -0.125F, yTop, -0.19375F, 0.125F, yTop + 0.25F, -0.19375F, Direction.UP, topColor, GraphicsHolder.getDefaultLight());
+	}
 
-        // Draw the bottom light
-        IDrawing.drawTexture(graphicsHolder, -0.125F, yBottom, -0.19375F, 0.125F, yBottom + 0.25F, -0.19375F, Direction.UP, bottomColor, GraphicsHolder.getDefaultLight());
-
-        graphicsHolder.pop();
+	// Draw the bottom light only if it's not blank
+	if (bottomColor != COLOR_BLANK) {
+	    IDrawing.drawTexture(graphicsHolder, -0.125F, yBottom, -0.19375F, 0.125F, yBottom + 0.25F, -0.19375F, Direction.UP, bottomColor, GraphicsHolder.getDefaultLight());
+	}
+	graphicsHolder.pop();
     });
 }
 }
