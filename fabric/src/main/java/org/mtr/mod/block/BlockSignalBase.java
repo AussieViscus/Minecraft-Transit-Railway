@@ -28,8 +28,8 @@ public abstract class BlockSignalBase extends BlockExtension implements Directio
 	public static final IntegerProperty POWER = IntegerProperty.of("power", 0, 15);
 
 	private static final int COOLDOWN_1 = 15000;
-	private static final int COOLDOWN_2 = COOLDOWN_1 + 12000;
-	private static final int COOLDOWN_3 = COOLDOWN_2 + 8000; 
+	private static final int COOLDOWN_2 = COOLDOWN_1 + 15000;
+	private static final int COOLDOWN_3 = COOLDOWN_2 + 12000; 
 	private static final int ACCEPT_REDSTONE_COOLDOWN = 800;
 
 	public BlockSignalBase(BlockSettings blockSettings) {
