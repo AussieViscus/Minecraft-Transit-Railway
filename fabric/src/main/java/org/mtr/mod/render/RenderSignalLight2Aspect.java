@@ -20,11 +20,56 @@ public class RenderSignalLight2Aspect<T extends BlockSignalBase.BlockEntityBase>
 
 	@Override
 	protected void render(StoredMatrixTransformations storedMatrixTransformations, T entity, float tickDelta, int occupiedAspect, boolean isBackSide) {
-		final float y = (occupiedAspect == 1) == redOnTop ? 0.4375F : 0.0625F;
-		MainRenderer.scheduleRender(new Identifier(Init.MOD_ID, "textures/block/white.png"), false, QueuedRenderLayer.LIGHT, (graphicsHolder, offset) -> {
-			storedMatrixTransformations.transform(graphicsHolder, offset);
-			IDrawing.drawTexture(graphicsHolder, -0.125F, y, -0.19375F, 0.125F, y + 0.25F, -0.19375F, Direction.UP, occupiedAspect == 1 ? 0xFFFF0000 : proceedColor, GraphicsHolder.getDefaultLight());
-			graphicsHolder.pop();
-		});
+    // Define positions and colors for clarity
+    final float yTop = 0.4375F;
+    final float yBottom = 0.0625F;
+    final int COLOR_RED = 0xFFFF0000;
+    final int COLOR_YELLOW = 0xFFFFAA00;
+    final int COLOR_GREEN = 0xFF00FF00;
+	final int COLOR_BLANK = 0;
+
+    int topColor;
+    int bottomColor;
+
+    // Determine the color for top and bottom lights based on the aspect
+    switch (occupiedAspect) {
+        case 1: // Occupied
+            topColor = COLOR_RED;
+            bottomColor = COLOR_RED;
+            break;
+        case 2: // Immediately after occupied
+			topColor = COLOR_RED;
+            bottomColor = COLOR_RED;
+            break;
+        case 3: // After first cooldown
+            topColor = COLOR_RED;
+            bottomColor = COLOR_YELLOW;
+            break;
+        case 4: // After second cooldown
+			topColor = COLOR_YELLOW;
+            bottomColor = COLOR_GREEN;
+            break;
+        case 5: // After third cooldown (Final state)
+        default: // Failsafe to the final clear state
+            topColor = COLOR_GREEN;
+            bottomColor = COLOR_RED;
+            break;
+    }
+
+    // Schedule both lights to be rendered with their determined colors
+    MainRenderer.scheduleRender(new Identifier(Init.MOD_ID, "textures/block/white.png"), false, QueuedRenderLayer.LIGHT, (graphicsHolder, offset) -> {
+        storedMatrixTransformations.transform(graphicsHolder, offset);
+
+    // Draw the top light only if it's not blank
+	if (topColor != COLOR_BLANK) {
+    	IDrawing.drawTexture(graphicsHolder, -0.125F, yTop, -0.19375F, 0.125F, yTop + 0.25F, -0.19375F, Direction.UP, topColor, GraphicsHolder.getDefaultLight());
 	}
+
+	// Draw the bottom light only if it's not blank
+	if (bottomColor != COLOR_BLANK) {
+	    IDrawing.drawTexture(graphicsHolder, -0.125F, yBottom, -0.19375F, 0.125F, yBottom + 0.25F, -0.19375F, Direction.UP, bottomColor, GraphicsHolder.getDefaultLight());
+	}
+	graphicsHolder.pop();
+    });
+}
 }

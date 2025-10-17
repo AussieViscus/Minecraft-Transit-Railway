@@ -280,6 +280,16 @@ public final class InitClient {
 		REGISTRY_CLIENT.registerItemModelPredicate(Items.TUNNEL_WALL_CREATOR_6_9, new Identifier(Init.MOD_ID, "selected"), checkItemPredicateTag());
 		REGISTRY_CLIENT.registerItemModelPredicate(Items.LIFT_BUTTONS_LINK_CONNECTOR, new Identifier(Init.MOD_ID, "selected"), checkItemPredicateTag());
 		REGISTRY_CLIENT.registerItemModelPredicate(Items.LIFT_BUTTONS_LINK_REMOVER, new Identifier(Init.MOD_ID, "selected"), checkItemPredicateTag());
+		REGISTRY_CLIENT.registerItemModelPredicate(Items.RAIL_CONNECTOR_25, new Identifier(Init.MOD_ID, "selected"), checkItemPredicateTag());
+		REGISTRY_CLIENT.registerItemModelPredicate(Items.RAIL_CONNECTOR_25_ONE_WAY, new Identifier(Init.MOD_ID, "selected"), checkItemPredicateTag());	
+		REGISTRY_CLIENT.registerItemModelPredicate(Items.RAIL_CONNECTOR_30, new Identifier(Init.MOD_ID, "selected"), checkItemPredicateTag());
+		REGISTRY_CLIENT.registerItemModelPredicate(Items.RAIL_CONNECTOR_30_ONE_WAY, new Identifier(Init.MOD_ID, "selected"), checkItemPredicateTag());	
+		REGISTRY_CLIENT.registerItemModelPredicate(Items.RAIL_CONNECTOR_50, new Identifier(Init.MOD_ID, "selected"), checkItemPredicateTag());
+		REGISTRY_CLIENT.registerItemModelPredicate(Items.RAIL_CONNECTOR_50_ONE_WAY, new Identifier(Init.MOD_ID, "selected"), checkItemPredicateTag());	
+		REGISTRY_CLIENT.registerItemModelPredicate(Items.RAIL_CONNECTOR_70, new Identifier(Init.MOD_ID, "selected"), checkItemPredicateTag());
+		REGISTRY_CLIENT.registerItemModelPredicate(Items.RAIL_CONNECTOR_90_ONE_WAY, new Identifier(Init.MOD_ID, "selected"), checkItemPredicateTag());	
+		REGISTRY_CLIENT.registerItemModelPredicate(Items.RAIL_CONNECTOR_110, new Identifier(Init.MOD_ID, "selected"), checkItemPredicateTag());
+		REGISTRY_CLIENT.registerItemModelPredicate(Items.RAIL_CONNECTOR_110_ONE_WAY, new Identifier(Init.MOD_ID, "selected"), checkItemPredicateTag());	
 
 		REGISTRY_CLIENT.registerBlockColors((blockState, blockRenderView, blockPos, tintIndex) -> getStationColor(blockPos),
 				Blocks.STATION_COLOR_ANDESITE,
