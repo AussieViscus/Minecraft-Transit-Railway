@@ -7,12 +7,12 @@ import org.mtr.mod.Init;
 import org.mtr.mod.block.BlockSignalBase;
 import org.mtr.mod.client.IDrawing;
 
-public class RenderSignalLight2Aspect<T extends BlockSignalBase.BlockEntityBase> extends RenderSignalBase<T> {
+public class RenderSignalLight2AspectTest<T extends BlockSignalBase.BlockEntityBase> extends RenderSignalBase<T> {
 
 	private final boolean redOnTop;
 	private final int proceedColor;
 
-	public RenderSignalLight2Aspect(Argument dispatcher, boolean redOnTop, int proceedColor) {
+	public RenderSignalLight2AspectTest(Argument dispatcher, boolean redOnTop, int proceedColor) {
 		super(dispatcher, 12, 2);
 		this.redOnTop = redOnTop;
 		this.proceedColor = proceedColor;
@@ -42,17 +42,17 @@ public class RenderSignalLight2Aspect<T extends BlockSignalBase.BlockEntityBase>
             bottomColor = COLOR_RED;
             break;
         case 3: // After first cooldown
-            topColor = COLOR_YELLOW;
-            bottomColor = COLOR_RED;
+            topColor = COLOR_RED;
+            bottomColor = COLOR_YELLOW;
             break;
         case 4: // After second cooldown
-			topColor = COLOR_GREEN;
-            bottomColor = COLOR_RED;
+			topColor = COLOR_RED;
+            bottomColor = COLOR_GREEN;
             break;
         case 5: // After third cooldown (Final state)
         default: // Failsafe to the final clear state
-            topColor = COLOR_GREEN;
-            bottomColor = COLOR_RED;
+            topColor = COLOR_RED;
+            bottomColor = COLOR_GREEN;
             break;
     }
 
