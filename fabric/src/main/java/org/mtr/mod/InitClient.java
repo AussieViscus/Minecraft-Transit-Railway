@@ -169,10 +169,10 @@ public final class InitClient {
 		REGISTRY_CLIENT.registerBlockEntityRenderer(BlockEntityTypes.ROUTE_SIGN_STANDING_METAL, RenderRouteSign::new);
 		REGISTRY_CLIENT.registerBlockEntityRenderer(BlockEntityTypes.ROUTE_SIGN_WALL_LIGHT, RenderRouteSign::new);
 		REGISTRY_CLIENT.registerBlockEntityRenderer(BlockEntityTypes.ROUTE_SIGN_WALL_METAL, RenderRouteSign::new);
-		REGISTRY_CLIENT.registerBlockEntityRenderer(BlockEntityTypes.SIGNAL_LIGHT_2_ASPECT_1, dispatcher -> new RenderSignalLight2Aspect<>(dispatcher, false, 0xFF0000FF));
-		REGISTRY_CLIENT.registerBlockEntityRenderer(BlockEntityTypes.SIGNAL_LIGHT_2_ASPECT_2, dispatcher -> new RenderSignalLight2Aspect<>(dispatcher, false, 0xFF0000FF));
-		REGISTRY_CLIENT.registerBlockEntityRenderer(BlockEntityTypes.SIGNAL_LIGHT_2_ASPECT_3, dispatcher -> new RenderSignalLight2Aspect<>(dispatcher, true, 0xFF00FF00));
-		REGISTRY_CLIENT.registerBlockEntityRenderer(BlockEntityTypes.SIGNAL_LIGHT_2_ASPECT_4, dispatcher -> new RenderSignalLight2Aspect<>(dispatcher, true, 0xFF00FF00));
+		REGISTRY_CLIENT.registerBlockEntityRenderer(BlockEntityTypes.SIGNAL_LIGHT_2_ASPECT_1, RenderSignalLight2Aspect::new);
+		REGISTRY_CLIENT.registerBlockEntityRenderer(BlockEntityTypes.SIGNAL_LIGHT_2_ASPECT_2, RenderSignalLight2Aspect::new);
+		REGISTRY_CLIENT.registerBlockEntityRenderer(BlockEntityTypes.SIGNAL_LIGHT_2_ASPECT_3, RenderSignalLight2Aspect::new);
+		REGISTRY_CLIENT.registerBlockEntityRenderer(BlockEntityTypes.SIGNAL_LIGHT_2_ASPECT_4, RenderSignalLight2Aspect::new);
 		REGISTRY_CLIENT.registerBlockEntityRenderer(BlockEntityTypes.SIGNAL_LIGHT_3_ASPECT_1, RenderSignalLight3Aspect::new);
 		REGISTRY_CLIENT.registerBlockEntityRenderer(BlockEntityTypes.SIGNAL_LIGHT_3_ASPECT_2, RenderSignalLight3Aspect::new);
 		REGISTRY_CLIENT.registerBlockEntityRenderer(BlockEntityTypes.SIGNAL_LIGHT_4_ASPECT_1, RenderSignalLight4Aspect::new);

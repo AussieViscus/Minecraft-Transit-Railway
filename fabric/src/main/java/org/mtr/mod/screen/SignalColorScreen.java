@@ -6,11 +6,14 @@ import org.mtr.mapping.holder.*;
 import org.mtr.mapping.mapper.*;
 import org.mtr.mod.InitClient;
 import org.mtr.mod.block.BlockSignalBase;
+import org.mtr.mod.block.TwoAspectSignalEntity;
 import org.mtr.mod.client.IDrawing;
 import org.mtr.mod.data.IGui;
+import org.mtr.mod.data.SignalAppearance;
 import org.mtr.mod.generated.lang.TranslationProvider;
 import org.mtr.mod.item.ItemSignalModifier;
 import org.mtr.mod.packet.PacketUpdateSignalConfig;
+import org.mtr.mod.packet.PacketUpdateSignalAppearance;
 import org.mtr.mod.render.RenderSignalBase;
 
 public class SignalColorScreen extends MTRScreenBase implements IGui {
@@ -23,6 +26,11 @@ public class SignalColorScreen extends MTRScreenBase implements IGui {
 	private final IntAVLTreeSet signalColors;
 	private final IntAVLTreeSet detectedColors = new IntAVLTreeSet();
 	private final boolean isBackSide;
+	private final ButtonWidgetExtension editLamps;
+	private final IntAVLTreeSet originalColors;
+	private final boolean originalAcceptRedstone;
+	private final boolean originalOutputRedstone;
+	private SignalAppearance appearance;
 
 	public SignalColorScreen(BlockPos blockPos, BlockSignalBase.BlockEntityBase blockEntity) {
 		super();
@@ -46,6 +54,20 @@ public class SignalColorScreen extends MTRScreenBase implements IGui {
 			signalColors = new IntAVLTreeSet(blockEntity.getSignalColors(isBackSide));
 			final RenderSignalBase.AspectState aspectState = RenderSignalBase.getAspectState(blockPos, angle + (isBackSide ? 180 : 0) + 90);
 			detectedColors.addAll(aspectState == null ? new IntAVLTreeSet() : aspectState.detectedColors);
+		}
+
+		originalColors = new IntAVLTreeSet(signalColors);
+		originalAcceptRedstone = blockEntity.getAcceptRedstone();
+		originalOutputRedstone = blockEntity.getOutputRedstone();
+		if (blockEntity instanceof TwoAspectSignalEntity) {
+			appearance = ((TwoAspectSignalEntity) blockEntity).getAppearance();
+			editLamps = new ButtonWidgetExtension(0, 0, 0, SQUARE_SIZE, TranslationProvider.GUI_MTR_EDIT_SIGNAL_LAMPS.getMutableText(), button ->
+					minecraftClient.openScreen(new Screen(new SignalAppearanceScreen(this, appearance, saved -> {
+						appearance = saved;
+						InitClient.REGISTRY_CLIENT.sendPacketToServer(new PacketUpdateSignalAppearance(blockPos, saved));
+					}))));
+		} else {
+			editLamps = null;
 		}
 
 		checkBoxAcceptRedstone = new CheckboxWidgetExtension(0, 0, 0, SQUARE_SIZE, true, checked -> toggleRedstoneCheckboxes1());
@@ -94,6 +116,10 @@ public class SignalColorScreen extends MTRScreenBase implements IGui {
 		addChild(new ClickableWidget(checkBoxAcceptRedstone));
 		addChild(new ClickableWidget(checkBoxOutputRedstone));
 		addChild(new ClickableWidget(checkBoxSelectAll));
+		if (editLamps != null) {
+			IDrawing.setPositionAndWidth(editLamps, SQUARE_SIZE, SQUARE_SIZE * 8, SQUARE_SIZE * 8);
+			addChild(new ClickableWidget(editLamps));
+		}
 		setButtons();
 	}
 
@@ -113,7 +139,9 @@ public class SignalColorScreen extends MTRScreenBase implements IGui {
 
 	@Override
 	public void onClose2() {
-		InitClient.REGISTRY_CLIENT.sendPacketToServer(new PacketUpdateSignalConfig(blockPos, checkBoxAcceptRedstone.isChecked2(), checkBoxOutputRedstone.isChecked2(), signalColors, isBackSide));
+		if (originalAcceptRedstone != checkBoxAcceptRedstone.isChecked2() || originalOutputRedstone != checkBoxOutputRedstone.isChecked2() || !originalColors.equals(signalColors)) {
+			InitClient.REGISTRY_CLIENT.sendPacketToServer(new PacketUpdateSignalConfig(blockPos, checkBoxAcceptRedstone.isChecked2(), checkBoxOutputRedstone.isChecked2(), signalColors, isBackSide));
+		}
 		super.onClose2();
 	}
 

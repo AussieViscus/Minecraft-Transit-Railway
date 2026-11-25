@@ -67,7 +67,7 @@ public class WidgetColorSelector extends ButtonWidgetExtension implements IGui {
 		color = clampedColor;
 	}
 
-	private static class ColorSelectorScreen extends ScreenExtension {
+	static class ColorSelectorScreen extends ScreenExtension {
 
 		private float hue;
 		private float saturation;
@@ -84,7 +84,7 @@ public class WidgetColorSelector extends ButtonWidgetExtension implements IGui {
 
 		private static final int RIGHT_WIDTH = 60;
 
-		private ColorSelectorScreen(int oldColor, Consumer<Integer> colorCallback) {
+		ColorSelectorScreen(int oldColor, Consumer<Integer> colorCallback) {
 			super();
 			this.oldColor = oldColor;
 			this.colorCallback = colorCallback;

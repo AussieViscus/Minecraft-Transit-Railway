@@ -2,7 +2,6 @@ package org.mtr.mod.render;
 
 import org.mtr.core.data.Position;
 import org.mtr.core.data.TwoPositionsBase;
-import org.mtr.core.tool.Utilities;
 import org.mtr.libraries.it.unimi.dsi.fastutil.ints.IntAVLTreeSet;
 import org.mtr.libraries.it.unimi.dsi.fastutil.ints.IntArrayList;
 import org.mtr.libraries.it.unimi.dsi.fastutil.longs.LongArrayList;
@@ -92,7 +91,7 @@ public abstract class RenderSignalBase<T extends BlockSignalBase.BlockEntityBase
 
 				// If filters are empty, render all signal states, including node states
 				// If filters are not empty, only render the signal state of the selected colors, even if the colors don't exist
-				final int occupiedAspect = entity.getActualAspect(filterColors.isEmpty() && aspectState.nodeBlocked || aspectState.occupiedColors.intStream().anyMatch(color -> filterColors.isEmpty() || filterColors.contains(color)), isBackSide);
+				final int occupiedAspect = entity.getActualAspect(aspectState.isOccupied(filterColors), isBackSide);
 				render(storedMatrixTransformationsNew, entity, tickDelta, occupiedAspect, isBackSide);
 
 				if (occupiedAspect > 0 && occupiedAspect < aspects) {
@@ -120,6 +119,10 @@ public abstract class RenderSignalBase<T extends BlockSignalBase.BlockEntityBase
 			return null;
 		}
 
+		return getAspectAtNode(startPos, angle);
+	}
+
+	static AspectState getAspectAtNode(BlockPos startPos, float angle) {
 		final MinecraftClientData minecraftClientData = MinecraftClientData.getInstance();
 		final IntArrayList detectedColors = new IntArrayList();
 		final IntAVLTreeSet occupiedColors = new IntAVLTreeSet();
@@ -128,7 +131,7 @@ public abstract class RenderSignalBase<T extends BlockSignalBase.BlockEntityBase
 		final Position startPosition = Init.blockPosToPosition(startPos);
 
 		minecraftClientData.positionsToRail.getOrDefault(startPosition, new Object2ObjectOpenHashMap<>()).forEach((endPosition, rail) -> {
-			if (Math.abs(Utilities.circularDifference(Math.round(Math.toDegrees(Math.atan2(endPosition.getZ() - startPos.getZ(), endPosition.getX() - startPos.getX()))), Math.round(angle), 360)) < 90) {
+			if (SignalPath.facesRail(startPosition, endPosition, angle)) {
 				rail.getSignalColors().forEach(detectedColors::add);
 				final String railId = rail.getHexId();
 				minecraftClientData.railIdToCurrentlyBlockedSignalColors.getOrDefault(railId, new LongArrayList()).forEach(color -> occupiedColors.add((int) color));
@@ -144,7 +147,7 @@ public abstract class RenderSignalBase<T extends BlockSignalBase.BlockEntityBase
 	}
 
 	@Nullable
-	private static BlockPos getNodePos(ClientWorld world, BlockPos pos, Direction facing) {
+	static BlockPos getNodePos(ClientWorld world, BlockPos pos, Direction facing) {
 		int closestDistance = Integer.MAX_VALUE;
 		BlockPos closestPos = null;
 		for (int z = -4; z <= 4; z++) {
@@ -169,6 +172,10 @@ public abstract class RenderSignalBase<T extends BlockSignalBase.BlockEntityBase
 		private final IntAVLTreeSet occupiedColors;
 		private final boolean nodeBlocked;
 		private final ObjectArrayList<String> railIds;
+
+		boolean isOccupied(IntAVLTreeSet filterColors) {
+			return filterColors.isEmpty() && nodeBlocked || occupiedColors.intStream().anyMatch(color -> filterColors.isEmpty() || filterColors.contains(color));
+		}
 
 		private AspectState(IntArrayList detectedColors, IntAVLTreeSet occupiedColors, boolean nodeBlocked, ObjectArrayList<String> railIds) {
 			this.detectedColors = detectedColors;
