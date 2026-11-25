@@ -2,29 +2,38 @@ package org.mtr.mod.screen;
 
 import org.mtr.mapping.holder.*;
 import org.mtr.mapping.mapper.*;
+import org.mtr.mod.InitClient;
 import org.mtr.mod.client.IDrawing;
 import org.mtr.mod.data.IGui;
 import org.mtr.mod.data.SignalAppearance;
 import org.mtr.mod.data.SignalAppearance.State;
 import org.mtr.mod.generated.lang.TranslationProvider;
+import org.mtr.mod.packet.PacketUpdateSignalAppearance;
 
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.function.Consumer;
 
 final class SignalAppearanceScreen extends MTRScreenBase implements IGui {
 
 	private final int[] colors = new int[SignalAppearance.COLOR_COUNT];
+	private final int[] initialColors;
+	private final SignalAppearance originalAppearance;
+	private final BlockPos pos;
 	private final Consumer<SignalAppearance> save;
 	private final State[] states = State.values();
 	private static final int[] PRESETS = {SignalAppearance.UNLIT, SignalAppearance.RED, SignalAppearance.YELLOW, SignalAppearance.GREEN};
 
-	SignalAppearanceScreen(SignalColorScreen parent, SignalAppearance appearance, Consumer<SignalAppearance> save) {
+	SignalAppearanceScreen(SignalColorScreen parent, BlockPos pos, SignalAppearance appearance, Consumer<SignalAppearance> save) {
 		super(parent);
+		this.pos = pos;
+		originalAppearance = appearance;
 		this.save = save;
 		for (State state : states) {
 			colors[state.ordinal() * 2] = appearance.getColor(state, false);
 			colors[state.ordinal() * 2 + 1] = appearance.getColor(state, true);
 		}
+		initialColors = colors.clone();
 	}
 
 	@Override
@@ -54,6 +63,10 @@ final class SignalAppearanceScreen extends MTRScreenBase implements IGui {
 			}), x + column - 28, y, 26);
 		}
 		final int y = SQUARE_SIZE * (states.length + 1) + TEXT_PADDING;
+		place(new ButtonWidgetExtension(0, 0, 0, SQUARE_SIZE, TranslationProvider.GUI_MTR_COPY_APPEARANCE_TO_BRUSH.getMutableText(), button -> {
+			final SignalAppearance preset = Arrays.equals(colors, initialColors) ? originalAppearance : SignalAppearance.fromArray(colors);
+			InitClient.REGISTRY_CLIENT.sendPacketToServer(new PacketUpdateSignalAppearance.CopyToBrush(pos, preset));
+		}), TEXT_PADDING, y + SQUARE_SIZE, width - TEXT_PADDING * 2);
 		place(new ButtonWidgetExtension(0, 0, 0, SQUARE_SIZE, TranslationProvider.GUI_MTR_RESET_SIGNAL_LAMPS.getMutableText(), button -> finish(SignalAppearance.DEFAULT)), TEXT_PADDING, y, width / 2 - TEXT_PADDING * 2);
 		place(new ButtonWidgetExtension(0, 0, 0, SQUARE_SIZE, TextHelper.translatable("gui.done"), button -> finish(SignalAppearance.fromArray(colors))), width / 2, y, width / 2 - TEXT_PADDING);
 	}

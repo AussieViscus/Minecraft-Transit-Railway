@@ -62,7 +62,7 @@ public class SignalColorScreen extends MTRScreenBase implements IGui {
 		if (blockEntity instanceof TwoAspectSignalEntity) {
 			appearance = ((TwoAspectSignalEntity) blockEntity).getAppearance();
 			editLamps = new ButtonWidgetExtension(0, 0, 0, SQUARE_SIZE, TranslationProvider.GUI_MTR_EDIT_SIGNAL_LAMPS.getMutableText(), button ->
-					minecraftClient.openScreen(new Screen(new SignalAppearanceScreen(this, appearance, saved -> {
+					minecraftClient.openScreen(new Screen(new SignalAppearanceScreen(this, blockPos, appearance, saved -> {
 						appearance = saved;
 						InitClient.REGISTRY_CLIENT.sendPacketToServer(new PacketUpdateSignalAppearance(blockPos, saved));
 					}))));

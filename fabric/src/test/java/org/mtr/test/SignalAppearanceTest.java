@@ -40,6 +40,28 @@ class SignalAppearanceTest {
 	}
 
 	@Test
+	void brushKeepsAnIndependentReusablePreset() {
+		final CompoundTag brush = new CompoundTag();
+		brush.putInt("other_brush_data", 42);
+		assertNull(SignalAppearance.fromBrush(brush));
+		final int[] colors = new int[SignalAppearance.COLOR_COUNT];
+		for (int i = 0; i < colors.length; i++) colors[i] = i % 3 == 0 ? SignalAppearance.UNLIT : i * 0x10203;
+		SignalAppearance.fromArray(colors).copyToBrush(brush);
+		final CompoundTag reloadedBrush = brush.copy();
+		for (int i = 0; i < 10; i++) {
+			final CompoundTag target = new CompoundTag();
+			target.putBoolean("accept_redstone", true);
+			SignalAppearance.fromBrush(reloadedBrush).write(target);
+			assertArrayEquals(colors, SignalAppearance.read(target).toArray());
+			assertTrue(target.getBoolean("accept_redstone"));
+		}
+		SignalAppearance.DEFAULT.copyToBrush(brush);
+		assertSame(SignalAppearance.DEFAULT, SignalAppearance.fromBrush(brush));
+		assertEquals(42, brush.getInt("other_brush_data"));
+		assertArrayEquals(colors, SignalAppearance.fromBrush(reloadedBrush).toArray());
+	}
+
+	@Test
 	void missingOrInvalidDataUsesCheckoutDefaults() {
 		assertSame(SignalAppearance.DEFAULT, SignalAppearance.fromArray(new int[0]));
 		final int[] invalid = new int[SignalAppearance.COLOR_COUNT];

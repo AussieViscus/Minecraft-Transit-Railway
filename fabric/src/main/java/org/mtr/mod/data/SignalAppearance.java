@@ -2,6 +2,8 @@ package org.mtr.mod.data;
 
 import org.mtr.mapping.holder.CompoundTag;
 
+import javax.annotation.Nullable;
+
 /** Lamp values are 24-bit RGB, with a separate sentinel for no draw call. */
 public final class SignalAppearance {
 
@@ -40,6 +42,7 @@ public final class SignalAppearance {
 	public static final SignalAppearance DEFAULT = new SignalAppearance(new int[0]);
 	private final int[] colors;
 	private static final String KEY_LAMPS = "aspect_lamps";
+	private static final String BRUSH_PRESET = "mtr_two_aspect_lamps";
 
 	private SignalAppearance(int[] colors) {
 		this.colors = colors;
@@ -64,6 +67,20 @@ public final class SignalAppearance {
 
 	public static SignalAppearance read(CompoundTag tag) {
 		return fromArray(tag.getIntArray(KEY_LAMPS));
+	}
+
+	public void copyToBrush(CompoundTag tag) {
+		// An empty array explicitly copies the original, unconfigured signal behaviour.
+		tag.putIntArray(BRUSH_PRESET, toArray());
+	}
+
+	@Nullable
+	public static SignalAppearance fromBrush(@Nullable CompoundTag tag) {
+		if (tag == null || !tag.contains(BRUSH_PRESET, 11)) return null; // NBT int array
+		final int[] colors = tag.getIntArray(BRUSH_PRESET);
+		if (colors.length == 0) return DEFAULT;
+		final SignalAppearance preset = fromArray(colors);
+		return preset == DEFAULT ? null : preset;
 	}
 
 	public void write(CompoundTag tag) {
