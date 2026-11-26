@@ -9,6 +9,7 @@ version rootProject.properties.version
 subprojects {
 	apply plugin: "java"
 	apply plugin: "com.github.johnrengelman.shadow"
+	sourceSets.main.java.srcDir(rootProject.file("common/src/main/java"))
 
 	configurations {
 		shadowImplementation

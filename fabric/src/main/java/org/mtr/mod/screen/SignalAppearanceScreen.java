@@ -21,7 +21,7 @@ final class SignalAppearanceScreen extends MTRScreenBase implements IGui {
 	private final SignalAppearance originalAppearance;
 	private final BlockPos pos;
 	private final Consumer<SignalAppearance> save;
-	private final State[] states = State.values();
+	private final State[] states = {State.STOP, State.NEXT_STOP, State.SECOND_STOP, State.PROCEED};
 	private static final int[] PRESETS = {SignalAppearance.UNLIT, SignalAppearance.RED, SignalAppearance.YELLOW, SignalAppearance.GREEN};
 
 	SignalAppearanceScreen(SignalColorScreen parent, BlockPos pos, SignalAppearance appearance, Consumer<SignalAppearance> save) {
@@ -29,7 +29,7 @@ final class SignalAppearanceScreen extends MTRScreenBase implements IGui {
 		this.pos = pos;
 		originalAppearance = appearance;
 		this.save = save;
-		for (State state : states) {
+		for (State state : State.values()) {
 			colors[state.ordinal() * 2] = appearance.getColor(state, false);
 			colors[state.ordinal() * 2 + 1] = appearance.getColor(state, true);
 		}
@@ -40,11 +40,11 @@ final class SignalAppearanceScreen extends MTRScreenBase implements IGui {
 	protected void init2() {
 		super.init2();
 		final int column = columnWidth();
-		for (int i = 0; i < colors.length; i++) {
-			final int index = i;
+		for (int i = 0; i < states.length * 2; i++) {
+			final int index = states[i / 2].ordinal() * 2 + i % 2;
 			final int x = width - (2 - i % 2) * column - TEXT_PADDING;
 			final int y = SQUARE_SIZE + (i / 2) * SQUARE_SIZE;
-			final ButtonWidgetExtension preset = new ButtonWidgetExtension(0, 0, 0, SQUARE_SIZE, label(colors[i]), button -> {
+			final ButtonWidgetExtension preset = new ButtonWidgetExtension(0, 0, 0, SQUARE_SIZE, label(colors[index]), button -> {
 				final int color = colors[index];
 				int next = 0;
 				for (int j = 0; j < PRESETS.length; j++) {
@@ -102,9 +102,10 @@ final class SignalAppearanceScreen extends MTRScreenBase implements IGui {
 		final int column = columnWidth();
 		graphics.drawCenteredText(TranslationProvider.GUI_MTR_TOP_LAMP.getMutableText(), width - TEXT_PADDING - 3 * column / 2, TEXT_PADDING, ARGB_WHITE);
 		graphics.drawCenteredText(TranslationProvider.GUI_MTR_BOTTOM_LAMP.getMutableText(), width - TEXT_PADDING - column / 2, TEXT_PADDING, ARGB_WHITE);
-		for (State state : states) {
+		for (int i = 0; i < states.length; i++) {
+			final State state = states[i];
 			final MutableText name = TextHelper.translatable("gui.mtr.signal_" + state.name().toLowerCase(Locale.ROOT));
-			graphics.drawText(name, TEXT_PADDING, SQUARE_SIZE * (state.ordinal() + 1) + TEXT_PADDING, ARGB_WHITE, false, GraphicsHolder.getDefaultLight());
+			graphics.drawText(name, TEXT_PADDING, SQUARE_SIZE * (i + 1) + TEXT_PADDING, ARGB_WHITE, false, GraphicsHolder.getDefaultLight());
 		}
 	}
 

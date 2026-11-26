@@ -11,7 +11,6 @@ import org.mtr.mod.data.SignalAppearance;
 public class RenderSignalLight2Aspect<T extends TwoAspectSignalEntity> extends RenderSignalBase<T> {
 
 	private static final Identifier WHITE = new Identifier(Init.MOD_ID, "textures/block/white.png");
-	private final SignalLookAhead lookAhead = new SignalLookAhead();
 
 	public RenderSignalLight2Aspect(Argument dispatcher) {
 		super(dispatcher, 12, 2);
@@ -20,8 +19,7 @@ public class RenderSignalLight2Aspect<T extends TwoAspectSignalEntity> extends R
 	@Override
 	protected void render(StoredMatrixTransformations transformations, T entity, float tickDelta, int occupiedAspect, boolean isBackSide) {
 		final SignalAppearance appearance = entity.getAppearance();
-		final int distance = occupiedAspect == 1 || appearance == SignalAppearance.DEFAULT ? 0 : lookAhead.distanceToStop(entity, isBackSide);
-		final SignalAppearance.State state = SignalAppearance.State.forDisplay(occupiedAspect, distance);
+		final SignalAppearance.State state = SignalAppearance.State.forDistance(occupiedAspect - 1);
 		final int top = appearance.getColor(state, false);
 		final int bottom = appearance.getColor(state, true);
 		if (top == SignalAppearance.UNLIT && bottom == SignalAppearance.UNLIT) return;

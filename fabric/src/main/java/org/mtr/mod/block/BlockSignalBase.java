@@ -18,7 +18,9 @@ import org.mtr.mod.packet.PacketOpenBlockEntityScreen;
 import org.mtr.mod.packet.PacketTurnOnBlockEntity;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public abstract class BlockSignalBase extends BlockExtension implements DirectionHelper, BlockWithEntity {
@@ -31,6 +33,17 @@ public abstract class BlockSignalBase extends BlockExtension implements Directio
 	private static final int COOLDOWN_2 = COOLDOWN_1 + 15000;
 	private static final int COOLDOWN_3 = COOLDOWN_2 + 12000; 
 	private static final int ACCEPT_REDSTONE_COOLDOWN = 800;
+	private static final List<BlockPos> NODE_OFFSETS = new ArrayList<>();
+
+	static {
+		for (int z = -4; z <= 4; z++) {
+			for (int x = -4; x <= 4; x++) {
+				for (int y = -5; y <= 5; y++) NODE_OFFSETS.add(new BlockPos(x, y, z));
+			}
+		}
+		// Stable ordering keeps the existing facing-dependent choice between equidistant nodes.
+		NODE_OFFSETS.sort(Comparator.comparingInt(p -> Math.abs(p.getX()) + Math.abs(p.getY()) + Math.abs(p.getZ())));
+	}
 
 	public BlockSignalBase(BlockSettings blockSettings) {
 		super(blockSettings);
@@ -81,6 +94,16 @@ public abstract class BlockSignalBase extends BlockExtension implements Directio
 
 	public static float getAngle(BlockState state) {
 		return IBlock.getStatePropertySafe(state, DirectionHelper.FACING).asRotation() + (IBlock.getStatePropertySafe(state, BlockSignalBase.IS_22_5).booleanValue ? 22.5F : 0) + (IBlock.getStatePropertySafe(state, BlockSignalBase.IS_45).booleanValue ? 45 : 0);
+	}
+
+	@Nullable
+	public static BlockPos getNodePos(World world, BlockPos pos, Direction facing) {
+		final Direction right = facing.rotateYClockwise();
+		for (BlockPos offset : NODE_OFFSETS) {
+			final BlockPos check = pos.up(offset.getY()).offset(right, offset.getX()).offset(facing, offset.getZ());
+			if (world.isChunkLoaded(check.getX() >> 4, check.getZ() >> 4) && world.getBlockState(check).getBlock().data instanceof BlockNode) return check;
+		}
+		return null;
 	}
 
 	public static abstract class BlockEntityBase extends BlockEntityExtension {

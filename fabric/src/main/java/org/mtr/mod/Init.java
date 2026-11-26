@@ -9,6 +9,7 @@ import org.mtr.core.data.Position;
 import org.mtr.core.operation.DepotOperationByName;
 import org.mtr.core.operation.SetTime;
 import org.mtr.core.serializer.SerializedDataBase;
+import org.mtr.core.simulation.Simulator;
 import org.mtr.core.servlet.OperationProcessor;
 import org.mtr.core.servlet.QueueObject;
 import org.mtr.core.servlet.Webserver;
@@ -26,9 +27,11 @@ import org.mtr.mapping.registry.CommandBuilder;
 import org.mtr.mapping.registry.Registry;
 import org.mtr.mapping.tool.DummyClass;
 import org.mtr.mixin.PlayerTeleportationStateAccessor;
+import org.mtr.mixin.signal.MainAccessor;
 import org.mtr.mod.config.Config;
 import org.mtr.mod.data.ArrivalsCacheServer;
 import org.mtr.mod.data.RailActionModule;
+import org.mtr.mod.data.SignalNetwork;
 import org.mtr.mod.generated.lang.TranslationProvider;
 import org.mtr.mod.packet.*;
 import org.mtr.mod.servlet.MinecraftOperationProcessor;
@@ -51,6 +54,7 @@ import java.util.function.Consumer;
 public final class Init implements Utilities {
 
 	private static Main main;
+	private static final Object2ObjectArrayMap<String, SignalNetwork> SIGNAL_NETWORKS = new Object2ObjectArrayMap<>();
 	private static int serverPort;
 	private static Runnable sendWorldTimeUpdate;
 	private static boolean canSendWorldTimeUpdate = true;
@@ -184,6 +188,9 @@ public final class Init implements Utilities {
 			final int defaultPort = Config.getServer().getWebserverPort();
 			serverPort = defaultPort <= 0 ? -1 : findFreePort(defaultPort);
 			main = new Main(minecraftServer.getSavePath(WorldSavePath.getRootMapped()).resolve("mtr"), serverPort, Config.getServer().getUseThreadedSimulation(), Config.getServer().getUseThreadedFileLoading(), webserverSetup, WORLD_ID_LIST.toArray(new String[0]));
+			for (Simulator simulator : ((MainAccessor) main).mtr$getSimulators()) {
+				SIGNAL_NETWORKS.put(simulator.dimension, new SignalNetwork(simulator));
+			}
 
 			serverTick = 0;
 			lastSavedMillis = System.currentTimeMillis();
@@ -221,6 +228,7 @@ public final class Init implements Utilities {
 		});
 
 		REGISTRY.eventRegistry.registerServerStopping(minecraftServer -> {
+			SIGNAL_NETWORKS.clear();
 			if (main != null) {
 				main.stop();
 			}
@@ -315,6 +323,11 @@ public final class Init implements Utilities {
 		} else {
 			RIDING_PLAYERS.put(serverPlayerEntity.getUuid(), () -> updatePlayer(serverPlayerEntity, true));
 		}
+	}
+
+	@Nullable
+	public static SignalNetwork getSignalNetwork(World world) {
+		return SIGNAL_NETWORKS.get(getWorldId(world));
 	}
 
 	public static String getWorldId(World world) {

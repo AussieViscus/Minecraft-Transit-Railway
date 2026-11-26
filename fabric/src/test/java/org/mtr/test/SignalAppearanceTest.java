@@ -67,11 +67,12 @@ class SignalAppearanceTest {
 		final int[] invalid = new int[SignalAppearance.COLOR_COUNT];
 		invalid[2] = 0x1000000;
 		assertSame(SignalAppearance.DEFAULT, SignalAppearance.fromArray(invalid));
-		final int[] tops = {SignalAppearance.RED, SignalAppearance.RED, SignalAppearance.YELLOW, SignalAppearance.GREEN, SignalAppearance.GREEN};
+		final int[] tops = {SignalAppearance.RED, SignalAppearance.RED, SignalAppearance.YELLOW, SignalAppearance.GREEN};
+		final int[] bottoms = {SignalAppearance.RED, SignalAppearance.YELLOW, SignalAppearance.GREEN, SignalAppearance.RED};
 		for (int i = 0; i < tops.length; i++) {
-			final State state = State.forDisplay(i + 1, 0);
+			final State state = State.forDistance(i);
 			assertEquals(tops[i], SignalAppearance.DEFAULT.getColor(state, false));
-			assertEquals(SignalAppearance.RED, SignalAppearance.DEFAULT.getColor(state, true));
+			assertEquals(bottoms[i], SignalAppearance.DEFAULT.getColor(state, true));
 		}
 	}
 }

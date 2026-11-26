@@ -2,6 +2,7 @@ package org.mtr.mod.render;
 
 import org.mtr.core.data.Position;
 import org.mtr.core.data.TwoPositionsBase;
+import org.mtr.core.tool.Utilities;
 import org.mtr.libraries.it.unimi.dsi.fastutil.ints.IntAVLTreeSet;
 import org.mtr.libraries.it.unimi.dsi.fastutil.ints.IntArrayList;
 import org.mtr.libraries.it.unimi.dsi.fastutil.longs.LongArrayList;
@@ -11,7 +12,6 @@ import org.mtr.mapping.holder.*;
 import org.mtr.mapping.mapper.BlockEntityRenderer;
 import org.mtr.mapping.mapper.GraphicsHolder;
 import org.mtr.mod.Init;
-import org.mtr.mod.block.BlockNode;
 import org.mtr.mod.block.BlockSignalBase;
 import org.mtr.mod.block.IBlock;
 import org.mtr.mod.client.IDrawing;
@@ -114,7 +114,7 @@ public abstract class RenderSignalBase<T extends BlockSignalBase.BlockEntityBase
 			return null;
 		}
 
-		final BlockPos startPos = getNodePos(clientWorld, blockPos, Direction.fromRotation(angle));
+		final BlockPos startPos = BlockSignalBase.getNodePos(new World(clientWorld.data), blockPos, Direction.fromRotation(angle));
 		if (startPos == null) {
 			return null;
 		}
@@ -131,7 +131,8 @@ public abstract class RenderSignalBase<T extends BlockSignalBase.BlockEntityBase
 		final Position startPosition = Init.blockPosToPosition(startPos);
 
 		minecraftClientData.positionsToRail.getOrDefault(startPosition, new Object2ObjectOpenHashMap<>()).forEach((endPosition, rail) -> {
-			if (SignalPath.facesRail(startPosition, endPosition, angle)) {
+			final long bearing = Math.round(Math.toDegrees(Math.atan2(endPosition.getZ() - startPosition.getZ(), endPosition.getX() - startPosition.getX())));
+			if (Math.abs(Utilities.circularDifference(bearing, Math.round(angle), 360)) < 90) {
 				rail.getSignalColors().forEach(detectedColors::add);
 				final String railId = rail.getHexId();
 				minecraftClientData.railIdToCurrentlyBlockedSignalColors.getOrDefault(railId, new LongArrayList()).forEach(color -> occupiedColors.add((int) color));
@@ -144,26 +145,6 @@ public abstract class RenderSignalBase<T extends BlockSignalBase.BlockEntityBase
 
 		Collections.sort(detectedColors);
 		return new AspectState(detectedColors, occupiedColors, blocked[0], railIds);
-	}
-
-	@Nullable
-	static BlockPos getNodePos(ClientWorld world, BlockPos pos, Direction facing) {
-		int closestDistance = Integer.MAX_VALUE;
-		BlockPos closestPos = null;
-		for (int z = -4; z <= 4; z++) {
-			for (int x = -4; x <= 4; x++) {
-				for (int y = -5; y <= 5; y++) {
-					final BlockPos checkPos = pos.up(y).offset(facing.rotateYClockwise(), x).offset(facing, z);
-					final BlockState checkState = world.getBlockState(checkPos);
-					final int distance = checkPos.getManhattanDistance(new Vector3i(pos.data));
-					if (checkState.getBlock().data instanceof BlockNode && distance < closestDistance) {
-						closestDistance = distance;
-						closestPos = checkPos;
-					}
-				}
-			}
-		}
-		return closestPos;
 	}
 
 	public static class AspectState {

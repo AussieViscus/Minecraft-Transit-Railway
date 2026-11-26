@@ -5,7 +5,12 @@
 	"compatibilityLevel": "JAVA_8",
 	"refmap": "mtr.refmap.json",
 	"mixins": [
-		"PlayerTeleportationStateAccessor"
+		"PlayerTeleportationStateAccessor",
+		"signal.MainAccessor",
+		"signal.SidingAccessor",
+		"signal.SimulatorAccessor",
+		"signal.VehicleAccessor",
+		"signal.VehicleSchemaAccessor"
 	],
 	"client": [
 		"ClientWorldRenderingMixin",

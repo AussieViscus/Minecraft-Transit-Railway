@@ -13,6 +13,7 @@ public final class SignalAppearance {
 	public static final int GREEN = 0x00FF00;
 
 	// Row order is part of the saved format. Each row contains top, then bottom.
+	// Retain the three legacy cooldown rows when editing or copying an existing palette.
 	public enum State {
 		STOP(RED, RED), NEXT_STOP(RED, YELLOW), SECOND_STOP(YELLOW, GREEN),
 		COOLDOWN_1(RED, RED), COOLDOWN_2(YELLOW, RED), COOLDOWN_3(GREEN, RED), PROCEED(GREEN, RED);
@@ -25,14 +26,11 @@ public final class SignalAppearance {
 			this.bottom = bottom;
 		}
 
-		public static State forDisplay(int localAspect, int distanceToStop) {
-			if (localAspect == 1) return STOP;
-			if (distanceToStop == 1) return NEXT_STOP;
-			if (distanceToStop == 2) return SECOND_STOP;
-			switch (localAspect) {
-				case 2: return COOLDOWN_1;
-				case 3: return COOLDOWN_2;
-				case 4: return COOLDOWN_3;
+		public static State forDistance(int distanceToStop) {
+			switch (distanceToStop) {
+				case 0: return STOP;
+				case 1: return NEXT_STOP;
+				case 2: return SECOND_STOP;
 				default: return PROCEED;
 			}
 		}
@@ -70,7 +68,7 @@ public final class SignalAppearance {
 	}
 
 	public void copyToBrush(CompoundTag tag) {
-		// An empty array explicitly copies the original, unconfigured signal behaviour.
+		// An empty array explicitly copies the default lamp colours.
 		tag.putIntArray(BRUSH_PRESET, toArray());
 	}
 
